@@ -7,10 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar_main_activity);
+        Toolbar toolbar = findViewById(R.id.toolbarMainActivity);
         setSupportActionBar(toolbar);
 
         calorieTracker = new CalorieTracker();
@@ -56,34 +56,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.add_calorie_entry){
-            View view = getLayoutInflater().inflate(R.layout.layout_calorie_counter_dialog, null);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Add a new entry")
-                    .setView(view)
-                    .setPositiveButton("OK", (dialog, i) -> {
-                        EditText nameEditText = view.findViewById(R.id.dialogEditTextTitle);
-                        EditText countEditText = view.findViewById(R.id.dialogEditTextCount);
-
-                        // validate edit text inputs
-                        if (validateTextInputs(nameEditText, countEditText)){
-                            Toast.makeText(this, "INPUT SUCCESS", Toast.LENGTH_SHORT).show();
-
-//                            calorieTracker.addEntry(
-//                                    nameEditText.getText().toString(),
-//                                    Integer.parseInt(countEditText.getText().toString())
-//                            );
-                            dialog.dismiss();
-                        }
-                        else{
-                            Toast.makeText(this, "INVALID INPUT", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton("CANCEL", (dialog, i) -> {
-                        dialog.cancel();
-                    });
-
-            builder.show();
+            handleNewEntryDialogue();
             return true;
         }
         else if (id == R.id.calorie_history){
@@ -96,7 +69,48 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void handleNewEntryDialogue() {
+        View dialogView = getLayoutInflater().inflate(R.layout.layout_calorie_counter_dialog, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add a new entry")
+                .setView(dialogView)
+                .setPositiveButton("OK", null)
+                .setNegativeButton("CANCEL", null);
+
+        // Bypass default dialog button dismissal, exit only on cancel or valid input
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(dialogInterface -> {
+            Button ok = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            ok.setOnClickListener(view ->{
+                EditText nameEditText = dialogView.findViewById(R.id.dialogEditTextTitle);
+                EditText countEditText = dialogView.findViewById(R.id.dialogEditTextCount);
+
+                // validate edit text inputs
+                if (validateTextInputs(nameEditText, countEditText)){
+                    Toast.makeText(MainActivity.this, "INPUT SUCCESS", Toast.LENGTH_SHORT).show();
+                    // Add inputs to class here
+//                    calorieTracker.addEntry(
+//                            nameEditText.getText().toString(),
+//                            Integer.parseInt(countEditText.getText().toString())
+//                    );
+                    alertDialog.dismiss();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "INVALID INPUT", Toast.LENGTH_SHORT).show();
+                }
+            });
+            Button cancel = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            cancel.setOnClickListener(view ->{
+                Toast.makeText(MainActivity.this, "DIALOG CANCELED", Toast.LENGTH_SHORT).show();
+                alertDialog.cancel();
+            });
+        });
+        alertDialog.show();
+    }
+
     private boolean validateTextInputs(EditText nameEditText, EditText countEditText) {
         return !TextUtils.isEmpty(nameEditText.getText().toString()) && !TextUtils.isEmpty(countEditText.getText().toString());
     }
 }
+

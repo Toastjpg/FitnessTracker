@@ -27,4 +27,5 @@
         android:inputType="number"
         android:hint="@string/calorie_intake_estimate"
         android:importantForAutofill="no" />
+
 </LinearLayout>
