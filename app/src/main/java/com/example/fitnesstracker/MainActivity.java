@@ -6,18 +6,24 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.fitnesstracker.model.CalorieTracker;
 import com.example.fitnesstracker.model.Counter;
 
 public class MainActivity extends AppCompatActivity {
     private Counter counter;
     private TextView textView;
+    private CalorieTracker calorieTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +32,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_main_activity);
         setSupportActionBar(toolbar);
 
-        textView = findViewById(R.id.counter_text);
-        counter = new Counter(3000);
-        updateCounterText();
+        calorieTracker = new CalorieTracker();
+
+//        textView = findViewById(R.id.counter_text);
+//        counter = new Counter(3000);
+//        updateCounterText();
     }
 
     public void updateCounterText(){
@@ -48,23 +56,39 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.add_calorie_entry){
-            new AlertDialog.Builder(this)
-                    .setTitle("Add a new entry")
-                    .setView(getLayoutInflater().inflate(R.layout.layout_calorie_counter_dialog, null))
+            View view = getLayoutInflater().inflate(R.layout.layout_calorie_counter_dialog, null);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Add a new entry")
+                    .setView(view)
                     .setPositiveButton("OK", (dialog, i) -> {
+                        EditText nameEditText = view.findViewById(R.id.dialogEditTextTitle);
+                        EditText countEditText = view.findViewById(R.id.dialogEditTextCount);
+
                         // validate edit text inputs
-                        // send inputs to model class here
-                        dialog.dismiss();
+                        if (validateTextInputs(nameEditText, countEditText)){
+                            Toast.makeText(this, "INPUT SUCCESS", Toast.LENGTH_SHORT).show();
+
+//                            calorieTracker.addEntry(
+//                                    nameEditText.getText().toString(),
+//                                    Integer.parseInt(countEditText.getText().toString())
+//                            );
+                            dialog.dismiss();
+                        }
+                        else{
+                            Toast.makeText(this, "INVALID INPUT", Toast.LENGTH_SHORT).show();
+                        }
                     })
                     .setNegativeButton("CANCEL", (dialog, i) -> {
                         dialog.cancel();
-                    })
-                    .show();
+                    });
 
+            builder.show();
             return true;
         }
         else if (id == R.id.calorie_history){
             Toast.makeText(this, "CLICKED ON HISTORY", Toast.LENGTH_SHORT).show();
+            // Handle history activity launch here
             return true;
         }
         else{
@@ -72,19 +96,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("InflateParams")
-    private void createDialogBox() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Add a new entry");
-        builder.setView(getLayoutInflater().inflate(R.layout.layout_calorie_counter_dialog, null));
-
-        builder.setPositiveButton("OK", (dialogInterface, i) -> {
-            // handle ok click
-        });
-        builder.setNegativeButton("CANCEL", (dialogInterface, i) -> {
-            // handle cancel
-        });
-
-        AlertDialog dialog = builder.create();
+    private boolean validateTextInputs(EditText nameEditText, EditText countEditText) {
+        return !TextUtils.isEmpty(nameEditText.getText().toString()) && !TextUtils.isEmpty(countEditText.getText().toString());
     }
 }

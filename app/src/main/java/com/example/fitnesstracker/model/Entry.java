@@ -1,11 +1,11 @@
 package com.example.fitnesstracker.model;
 
 // Object representing a meal entry in the fitness log
-public class CalorieEntry {
+public class Entry {
     private String name;
     private int numCalories;
 
-    public CalorieEntry(String name, int numCalories){
+    public Entry(String name, int numCalories){
         this.name = name;
         this.numCalories = numCalories;
     }
