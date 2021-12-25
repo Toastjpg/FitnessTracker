@@ -1,23 +1,24 @@
 package com.example.fitnesstracker.model;
 
+// Simple counter class that increments and decrements an integer
 public class Counter {
-    int calorieCount;
+    private int count;
 
     public Counter(int calorieCount) {
-        this.calorieCount = calorieCount;
+        this.count = calorieCount;
     }
 
     public void decrement(int val){
-        if (calorieCount >= val){
-            calorieCount -= val;
+        if (count >= val){
+            count -= val;
         }
     }
 
     public void increment(int val){
-        calorieCount += val;
+        count += val;
     }
 
-    public int getCalorieCount(){
-        return calorieCount;
+    public int getCount(){
+        return count;
     }
 }

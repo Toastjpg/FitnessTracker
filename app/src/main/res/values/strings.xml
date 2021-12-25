@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Fitness Tracker</string>
-    <string name="increment">Increment</string>
-    <string name="decrement">decrement</string>
+    <string name="history">history</string>
+    <string name="new_entry">new entry</string>
+    <string name="entry_title">Entry Title</string>
+    <string name="calorie_intake_estimate">Calorie Intake (Estimate)</string>
 </resources>
