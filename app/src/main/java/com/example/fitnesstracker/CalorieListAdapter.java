@@ -37,7 +37,7 @@ public class CalorieListAdapter extends ArrayAdapter<Entry> {
             TextView titleText = view.findViewById(R.id.adapterTextViewTitle);
             TextView countText = view.findViewById(R.id.adapterTextViewCount);
 
-            titleText.setText(entry.getName());
+            titleText.setText(entry.getTitle());
             countText.setText(String.valueOf(entry.getNumCalories()));
         }
 

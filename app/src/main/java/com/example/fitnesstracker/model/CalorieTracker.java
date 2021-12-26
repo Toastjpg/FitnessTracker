@@ -3,16 +3,15 @@ package com.example.fitnesstracker.model;
 import java.util.ArrayList;
 
 public class CalorieTracker {
-    private final ArrayList<Entry> entryList;
+    private ArrayList<Entry> entryList;
 
     public CalorieTracker(){
         this.entryList = new ArrayList<>();
     }
 
     // Add entry
-    public void addEntry(String name, int numCalories){
-        Entry newEntry = new Entry(name, numCalories);
-        entryList.add(newEntry);
+    public void addEntry(Entry entry){
+        entryList.add(entry);
     }
 
     public Entry getEntry(int index){
@@ -21,6 +20,10 @@ public class CalorieTracker {
 
     public ArrayList<Entry> getEntryList(){
         return entryList;
+    }
+
+    public void setEntryList(ArrayList<Entry> entryList){
+        this.entryList = entryList;
     }
 
     // Remove entry from index

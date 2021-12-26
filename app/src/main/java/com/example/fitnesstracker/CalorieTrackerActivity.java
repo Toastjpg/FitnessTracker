@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -18,11 +19,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.fitnesstracker.data.CalorieDbHelper;
 import com.example.fitnesstracker.model.CalorieTracker;
+import com.example.fitnesstracker.model.Entry;
 
 public class CalorieTrackerActivity extends AppCompatActivity {
     private TextView textView;
     private CalorieTracker calorieTracker;
+    private CalorieDbHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +37,13 @@ public class CalorieTrackerActivity extends AppCompatActivity {
 
         calorieTracker = new CalorieTracker();
         textView = findViewById(R.id.counterTextView);
+        dbHelper = new CalorieDbHelper(this);
 
+        calorieTracker.setEntryList(dbHelper.getFromDatabase());
         populateViews();
     }
 
-    // Updates custom listview and counter textviews
+    // Updates custom listview and counter textview
     private void populateViews() {
         CalorieListAdapter listAdapter = new CalorieListAdapter(this, R.layout.layout_list_view_adapter, calorieTracker.getEntryList());
         ListView listView = findViewById(R.id.calorieListVIew);
@@ -93,11 +99,18 @@ public class CalorieTrackerActivity extends AppCompatActivity {
 
                 // validate edit text inputs
                 if (validateTextInputs(nameEditText, countEditText)){
-                    Toast.makeText(CalorieTrackerActivity.this, "INPUT SUCCESS", Toast.LENGTH_SHORT).show();
-                    calorieTracker.addEntry(
-                            nameEditText.getText().toString(),
+                    Entry entry = new Entry(
+                            nameEditText.getText().toString() ,
                             Integer.parseInt(countEditText.getText().toString())
                     );
+                    calorieTracker.addEntry(entry);
+                    final boolean b = dbHelper.addToDatabase(entry);
+                    if (b){
+                        Toast.makeText(CalorieTrackerActivity.this, "ADDED TO DB", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(CalorieTrackerActivity.this, "DB ERROR", Toast.LENGTH_SHORT).show();
+                    }
                     populateViews();
                     alertDialog.dismiss();
                 }
@@ -107,10 +120,7 @@ public class CalorieTrackerActivity extends AppCompatActivity {
             });
 
             Button cancel = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-            cancel.setOnClickListener(view ->{
-                Toast.makeText(CalorieTrackerActivity.this, "DIALOG CANCELED", Toast.LENGTH_SHORT).show();
-                alertDialog.cancel();
-            });
+            cancel.setOnClickListener(view -> alertDialog.cancel());
         });
         alertDialog.show();
     }

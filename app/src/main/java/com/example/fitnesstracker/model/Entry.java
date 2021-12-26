@@ -2,20 +2,20 @@ package com.example.fitnesstracker.model;
 
 // Object representing a meal entry in the fitness log
 public class Entry {
-    private String name;
+    private String title;
     private int numCalories;
 
     public Entry(String name, int numCalories){
-        this.name = name;
+        this.title = name;
         this.numCalories = numCalories;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setTitle(String title){
+        this.title = title;
     }
 
     public int getNumCalories() {
