@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,13 @@ public class MainActivity extends AppCompatActivity {
 //        textView = findViewById(R.id.counter_text);
 //        counter = new Counter(3000);
 //        updateCounterText();
+        populateListView();
+    }
+
+    private void populateListView() {
+        CalorieListAdapter listAdapter = new CalorieListAdapter(this, R.layout.layout_list_view_adapter, calorieTracker.getEntryList());
+        ListView listView = findViewById(R.id.calorieListVIew);
+        listView.setAdapter(listAdapter);
     }
 
     public void updateCounterText(){
@@ -89,11 +98,11 @@ public class MainActivity extends AppCompatActivity {
                 // validate edit text inputs
                 if (validateTextInputs(nameEditText, countEditText)){
                     Toast.makeText(MainActivity.this, "INPUT SUCCESS", Toast.LENGTH_SHORT).show();
-                    // Add inputs to class here
-//                    calorieTracker.addEntry(
-//                            nameEditText.getText().toString(),
-//                            Integer.parseInt(countEditText.getText().toString())
-//                    );
+                    calorieTracker.addEntry(
+                            nameEditText.getText().toString(),
+                            Integer.parseInt(countEditText.getText().toString())
+                    );
+                    populateListView();
                     alertDialog.dismiss();
                 }
                 else{
@@ -111,6 +120,12 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean validateTextInputs(EditText nameEditText, EditText countEditText) {
         return !TextUtils.isEmpty(nameEditText.getText().toString()) && !TextUtils.isEmpty(countEditText.getText().toString());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        populateListView();
     }
 }
 

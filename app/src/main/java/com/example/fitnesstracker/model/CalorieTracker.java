@@ -19,6 +19,10 @@ public class CalorieTracker {
         return entryList.get(index);
     }
 
+    public ArrayList<Entry> getEntryList(){
+        return entryList;
+    }
+
     // Remove entry from index
     public boolean removeEntry(int index){
         if (index > 0 && index <= entryList.size()){
