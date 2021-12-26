@@ -36,4 +36,12 @@ public class CalorieTracker {
     public void clearEntryList(){
         entryList.clear();
     }
+
+    public int getCalorieCount(){
+        int count = 0;
+        for(Entry entry : entryList){
+            count += entry.getNumCalories();
+        }
+        return count;
+    }
 }

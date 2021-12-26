@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -20,37 +19,34 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.fitnesstracker.model.CalorieTracker;
-import com.example.fitnesstracker.model.Counter;
 
-public class MainActivity extends AppCompatActivity {
-    private Counter counter;
+public class CalorieTrackerActivity extends AppCompatActivity {
     private TextView textView;
     private CalorieTracker calorieTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_calorie_tracker);
         Toolbar toolbar = findViewById(R.id.toolbarMainActivity);
         setSupportActionBar(toolbar);
 
         calorieTracker = new CalorieTracker();
+        textView = findViewById(R.id.counterTextView);
 
-//        textView = findViewById(R.id.counter_text);
-//        counter = new Counter(3000);
-//        updateCounterText();
-        populateListView();
+        populateViews();
     }
 
-    private void populateListView() {
+    // Updates custom listview and counter textviews
+    private void populateViews() {
         CalorieListAdapter listAdapter = new CalorieListAdapter(this, R.layout.layout_list_view_adapter, calorieTracker.getEntryList());
         ListView listView = findViewById(R.id.calorieListVIew);
         listView.setAdapter(listAdapter);
+        updateCounterText();
     }
 
     public void updateCounterText(){
-        int count = counter.getCount();
-        textView.setText(String.valueOf(count));
+        textView.setText(String.valueOf(calorieTracker.getCalorieCount()));
     }
 
     @Override
@@ -97,21 +93,22 @@ public class MainActivity extends AppCompatActivity {
 
                 // validate edit text inputs
                 if (validateTextInputs(nameEditText, countEditText)){
-                    Toast.makeText(MainActivity.this, "INPUT SUCCESS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CalorieTrackerActivity.this, "INPUT SUCCESS", Toast.LENGTH_SHORT).show();
                     calorieTracker.addEntry(
                             nameEditText.getText().toString(),
                             Integer.parseInt(countEditText.getText().toString())
                     );
-                    populateListView();
+                    populateViews();
                     alertDialog.dismiss();
                 }
                 else{
-                    Toast.makeText(MainActivity.this, "INVALID INPUT", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CalorieTrackerActivity.this, "INVALID INPUT", Toast.LENGTH_SHORT).show();
                 }
             });
+
             Button cancel = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
             cancel.setOnClickListener(view ->{
-                Toast.makeText(MainActivity.this, "DIALOG CANCELED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CalorieTrackerActivity.this, "DIALOG CANCELED", Toast.LENGTH_SHORT).show();
                 alertDialog.cancel();
             });
         });
@@ -125,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        populateListView();
+        populateViews();
     }
 }
 
