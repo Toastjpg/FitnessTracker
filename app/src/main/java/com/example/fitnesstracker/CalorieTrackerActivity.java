@@ -59,9 +59,10 @@ public class CalorieTrackerActivity extends AppCompatActivity {
             if (dbHelper.deleteFromDatabase(i)){
                 calorieTracker.removeEntry(i);
                 populateViews();
+                Toast.makeText(this, "DELETED ENTRY #" + (i + 1), Toast.LENGTH_SHORT).show();
             }
             else{
-                System.out.println("SOMETHING WENT WRONG");
+                Toast.makeText(this, "SOMETHING WENT WRONG", Toast.LENGTH_SHORT).show();
             }
             return false;
         });
