@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -41,6 +40,7 @@ public class CalorieTrackerActivity extends AppCompatActivity {
 
         calorieTracker.setEntryList(dbHelper.getFromDatabase());
         populateViews();
+        registerListViewOnClick();
     }
 
     // Updates custom listview and counter textview
@@ -49,6 +49,20 @@ public class CalorieTrackerActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.calorieListVIew);
         listView.setAdapter(listAdapter);
         updateCounterText();
+    }
+
+    private void registerListViewOnClick() {
+        ListView listview = findViewById(R.id.calorieListVIew);
+        listview.setOnItemClickListener(((adapterView, view, position, id) -> {
+            // Delete data at position
+            if (dbHelper.deleteFromDatabase(position)){
+                calorieTracker.removeEntry(position);
+                populateViews();
+            }
+            else{
+                System.out.println("SOMETHING WENT WRONG");
+            }
+        }));
     }
 
     public void updateCounterText(){
@@ -70,9 +84,11 @@ public class CalorieTrackerActivity extends AppCompatActivity {
             handleNewEntryDialogue();
             return true;
         }
-        else if (id == R.id.calorie_history){
-            Toast.makeText(this, "CLICKED ON HISTORY", Toast.LENGTH_SHORT).show();
-            // Handle history activity launch here
+        else if (id == R.id.calorie_clear){
+            Toast.makeText(this, "CLEARED ALL ENTRIES", Toast.LENGTH_SHORT).show();
+            dbHelper.clearDatabase();
+            calorieTracker.clearEntryList();
+            populateViews();
             return true;
         }
         else{

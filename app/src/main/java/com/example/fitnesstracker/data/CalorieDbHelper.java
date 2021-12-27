@@ -56,6 +56,22 @@ public class CalorieDbHelper extends SQLiteOpenHelper {
         return newRowId != -1;
     }
 
+    public boolean deleteFromDatabase(int position){
+        String queryString = "ID in (SELECT ID FROM " + TABLE_NAME + " LIMIT 1 OFFSET " + position + ")";
+        SQLiteDatabase db = this.getWritableDatabase();
+        int numDeleted = db.delete(TABLE_NAME, queryString, null);
+        System.out.println(numDeleted);
+        db.close();
+        // Expect to delete single row at position offset
+        return numDeleted == 1;
+    }
+
+    public void clearDatabase(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, null, null);
+        db.close();
+    }
+
     public ArrayList<Entry> getFromDatabase(){
         ArrayList<Entry> entryArrayList = new ArrayList<>();
 

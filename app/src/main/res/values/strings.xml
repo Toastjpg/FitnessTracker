@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Fitness Tracker</string>
-    <string name="history">history</string>
+    <string name="clear">clear</string>
     <string name="new_entry">new entry</string>
     <string name="entry_title">Entry Title</string>
     <string name="calorie_intake_estimate">Calorie Intake (Estimate)</string>
