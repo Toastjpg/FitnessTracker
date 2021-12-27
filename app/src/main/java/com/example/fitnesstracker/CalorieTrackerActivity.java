@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -53,16 +54,17 @@ public class CalorieTrackerActivity extends AppCompatActivity {
 
     private void registerListViewOnClick() {
         ListView listview = findViewById(R.id.calorieListVIew);
-        listview.setOnItemClickListener(((adapterView, view, position, id) -> {
+        listview.setOnItemLongClickListener((adapterView, view, i, l) -> {
             // Delete data at position
-            if (dbHelper.deleteFromDatabase(position)){
-                calorieTracker.removeEntry(position);
+            if (dbHelper.deleteFromDatabase(i)){
+                calorieTracker.removeEntry(i);
                 populateViews();
             }
             else{
                 System.out.println("SOMETHING WENT WRONG");
             }
-        }));
+            return false;
+        });
     }
 
     public void updateCounterText(){
